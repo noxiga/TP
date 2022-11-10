@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Register</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Validation js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
+    <script>
+        $(function()
+        {
+            // On va gérer la validation du formulaire
+            $('#form').validator().on('submit', function (e) {
+            // Si le validator a détecté un problème
+            if (e.isDefaultPrevented()) {
+                $("#reponse").fadeIn() ;
+                $("#reponse").fadeOut(3000) ;
+                $("#reponse").html("Veuillez compléter le formulaire d'enregistrement");
+            } 
+            else {
+                uname = $("#uname").val() ;
+                pass = $("#pass").val() ;
+                email = $("#email").val() ;
+                sexe = $("#sexe").val() ;
+                e.preventDefault() ; // To avoid reloading web page
+                $.ajax({
+                    url : 'PHP/RegisterPDO.php',
+                    type : 'POST',
+                    data : {"login":uname,"pwd":pass,"email":email, "sexe":sexe},
+                    dataType : 'JSON',
+                    success : handleResponse ,
+                    error : function(resultat, statut, erreur){ alert(erreur); }
+                    });
+                }
+            });
+        });
+            
+        function handleResponse(jsonResponse) {
+            if(jsonResponse.message=="OK") {
+                $("#reponse").fadeIn() ;
+                $("#reponse").fadeOut(3000) ;
+                $("#reponse").html(uname + " a été enregistré avec succès");
+                setTimeout( function() {
+                    window.location.replace("accueil.html?name="+uname+"&Sexe="+sexe);
+                    }, 3000);
+            }
+            else {
+                $("#reponse").fadeIn();
+                $("#reponse").fadeOut(3000) ;
+                $("#reponse").html(jsonResponse.message);
+            }
+        }
+    </script>
+    </head>
+    <body>
+        <div class="container">
+        <form data-toggle="validator" role="form" id="form">
+            <div class="form-group">
+                <label for="inputName" class="control-label">Name</label>
+                <input type="text" class="form-control" id="uname" placeholder="snir" required>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="control-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Email" data-error="Bruh, that email address is invalid" required>
+            <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="control-label">Password</label>
+                <div class="form-inline row">
+                    <div class="form-group col-sm-6">
+                        <input type="password" data-minlength="4" class="form-control" id="pass" placeholder="Password" required>
+                        <div class="help-block">Minimum of 4 characters</div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <input type="password" class="form-control" id="passConfirm" data-match="#pass" data-match-error="Whoops, these don't match" placeholder="Confirm" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="radio">
+                    <label><input type="radio" name="optradio" id="sexe" value="Male" checked>Male</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="optradio" id="sexe" value="Female">Female</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="terms" data-error="Je ne suis pas un robot...." required>Check yourself
+                    </label>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    <div class="col-xs-3">
+                        <a href="index.html" class="btn btn-primary">Cancel</a>
+                    </div>
+                    <div class="col-xs-6 alert-danger">
+                        <span id="reponse"><!-- les messages d'erreurs --></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </body>
+</html>

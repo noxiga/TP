@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script type="text/javascript">
+            $(function() {
+                urlParams = new URLSearchParams(window.location.search);
+                Name = urlParams.get('name') ; // login de la personne
+                Sexe = urlParams.get('sexe') ;
+                alert(Sexe);
+                $("#Name").html(Name,) ;
+                if(Name!="") { // si pas d'erreurs de connexion
+                    if(Sexe=='Male'){
+                        prefixe = "Mme";
+                    }
+                    else{
+                        prefixe = "Mr";
+                    }
+                }
+                $("#prefixe").html(prefixe,) ;
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 aligne="center">Welcome&nbsp; <span id="prefixe"></span>&nbsp; <span id="Name"></span></h1>
+            </div>
+            <a href="index.html"><button class="btn btn-danger">Logout</button></a>
+        </div>
+    </body>
+</html>

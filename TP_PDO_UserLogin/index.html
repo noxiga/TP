@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .form-border{
+            border:2px solid #CCCCCC ;
+            padding:10px 30px 10px 30px;
+            border-radius:20px;
+            margin:50px auto;
+        }
+    </style>
+    <script>
+        $(function()
+        {
+            $("#Login").click(function()
+            {
+                uname = $("#uname").val() ;
+                pass = $("#pass").val() ;
+                $.ajax({
+                    url : 'PHP/LoginPDO.php',
+                    type : 'POST',
+                    data : {"userName":uname,"passWord": pass},
+                    dataType : 'JSON',
+                    success : handleResponse , // Gestionnaire de la réponse
+                    error : function(resultat, statut, erreur){ alert(resultat); }
+                });
+            });
+        });
+
+        function handleResponse(jsonResponse) {
+            // Si tout s'est bien passé, la réponse doit être "OK"
+            if(jsonResponse.message=="OK")
+            {
+                sexe = jsonResponse.sexe;
+                window.location.replace("accueil.html?name="+uname+"&Sexe="+sexe);
+            }
+            else // sinon, on affiche l'explication du problème
+            {
+                $("#reponse").fadeIn() ;
+                $("#reponse").fadeOut(3000) ;
+                $("#reponse").html(jsonResponse.message) ;
+            }
+        }
+    </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="form-border">
+                <h2>Login Form</h2>
+                <div class="form-group">
+                    <label for="username"> Username:</label>
+                    <input type="text" class="form-control" id="uname" placeholder="Enter username"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="pass" class="form-control" placeholder="Enter password"/>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <button type="button" id="Login" class="btn btn-primary">Login</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <a href="register.html" class="btn btn-primary">NewAccount</a>
+                        </div>
+                        <div class="col-xs-6 alert-danger">
+                            <span id="reponse"><!-- les messages d'erreurs --></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
